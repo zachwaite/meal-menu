@@ -93,8 +93,8 @@ class TestDateRangeMixin(TestMealMenuBase):
         """
         """
         data = [
-            (21, datetime.date(2019, 11, 22)),
-            (10, datetime.date(2019, 11, 11)),
+            (21, datetime.date(2019, 11, 21)),
+            (10, datetime.date(2019, 11, 10)),
         ]
 
         DateRangeMixin = self.env['daterange.mixin']

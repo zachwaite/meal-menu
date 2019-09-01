@@ -9,6 +9,6 @@ class MealTime(models.Model):
     @api.model
     def create(self, vals):
         self._prepare_image_vals(vals)
-        return super(MealLocation, self).create(vals)
+        return super(MealTime, self).create(vals)
 
 

@@ -22,15 +22,24 @@ class MealCycle(models.Model):
         comodel_name='meal.meal',
         inverse_name='meal_cycle_id',
     )
-    # meal_location_ids
-    # meal_time_ids
+
+    meal_location_ids = fields.Many2many(
+        comodel_name='meal.location',
+    )
+
+    meal_time_ids = fields.Many2many(
+        comodel_name='meal.time',
+    )
 
     def get_default_cycle_start_date(self):
         """Use the history to get the next upcoming cycle start
         """
         Meal = self.env['meal.meal']
         last_meal_date = Meal.get_last_scheduled_meal_date()
-        return last_meal_date + datetime.timedelta(days=1)
+        if last_meal_date:
+            return last_meal_date + datetime.timedelta(days=1)
+        else:
+            return datetime.date.today() + datetime.timedelta(days=1)
 
     @api.multi
     def generate_meals(self):
@@ -45,5 +54,6 @@ class MealCycle(models.Model):
         vals_list = []
         date_series = self.get_date_series(self.start_date, self.end_date)
         # TODO: This will need additional params for meal_time_ids, meal_location_ids
-        meal_data = Meal.generate_meal_data(self.id, date_series)
-        return Meal.create(meal_data)
+        meal_data = Meal.generate_meal_data(self.id, self.meal_location_ids.ids, self.meal_time_ids.ids, date_series)
+        meals = Meal.create(meal_data)
+        return True

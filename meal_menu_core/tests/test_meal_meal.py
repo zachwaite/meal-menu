@@ -28,7 +28,7 @@ class TestMealMeal(TestMealMenuBase):
         """Check if the required flag is set. No need to test if it works,
         odoo does that.
         """
-        REQUIRED = ['meal_date', 'meal_cycle_id']
+        REQUIRED = ['meal_date', 'meal_cycle_id', 'meal_location_id', 'meal_time_id']
 
         Fields = self.env['ir.model.fields']
         MODEL = 'meal.meal'
@@ -37,10 +37,18 @@ class TestMealMeal(TestMealMenuBase):
             frecord = Fields.search([('model', '=', MODEL), ('name', '=', fld)])
             self.assertTrue(frecord.required)
 
+    def test_get_last_scheduled_meal_date(self):
+        """
+        """
+        pass
+
+
     def test_generate_meal_data(self):
         data = [
             {
                 'meal_cycle_id': 1,
+                'meal_location_ids': [1],
+                'meal_time_ids': [1],
                 'date_series': [
                     datetime.date(2019, 11, 1),
                     datetime.date(2019, 11, 2),
@@ -48,16 +56,45 @@ class TestMealMeal(TestMealMenuBase):
                     datetime.date(2019, 11, 4),
                 ],
                 'expected': [
-                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 1)},
-                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 2)},
-                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 3)},
-                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 4)},
+                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 1), 'meal_location_id': 1, 'meal_time_id': 1},
+                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 2), 'meal_location_id': 1, 'meal_time_id': 1},
+                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 3), 'meal_location_id': 1, 'meal_time_id': 1},
+                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 4), 'meal_location_id': 1, 'meal_time_id': 1},
+                ],
+            },
+            {
+                'meal_cycle_id': 1,
+                'meal_location_ids': [1, 2],
+                'meal_time_ids': [1, 2],
+                'date_series': [
+                    datetime.date(2019, 11, 1),
+                    datetime.date(2019, 11, 2),
+                    datetime.date(2019, 11, 3),
+                    datetime.date(2019, 11, 4),
+                ],
+                'expected': [
+                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 1), 'meal_location_id': 1, 'meal_time_id': 1},
+                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 1), 'meal_location_id': 1, 'meal_time_id': 2},
+                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 1), 'meal_location_id': 2, 'meal_time_id': 1},
+                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 1), 'meal_location_id': 2, 'meal_time_id': 2},
+                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 2), 'meal_location_id': 1, 'meal_time_id': 1},
+                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 2), 'meal_location_id': 1, 'meal_time_id': 2},
+                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 2), 'meal_location_id': 2, 'meal_time_id': 1},
+                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 2), 'meal_location_id': 2, 'meal_time_id': 2},
+                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 3), 'meal_location_id': 1, 'meal_time_id': 1},
+                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 3), 'meal_location_id': 1, 'meal_time_id': 2},
+                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 3), 'meal_location_id': 2, 'meal_time_id': 1},
+                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 3), 'meal_location_id': 2, 'meal_time_id': 2},
+                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 4), 'meal_location_id': 1, 'meal_time_id': 1},
+                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 4), 'meal_location_id': 1, 'meal_time_id': 2},
+                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 4), 'meal_location_id': 2, 'meal_time_id': 1},
+                    {'meal_cycle_id': 1, 'meal_date': datetime.date(2019, 11, 4), 'meal_location_id': 2, 'meal_time_id': 2},
                 ],
             }
         ]
         Meal = self.env['meal.meal']
         for case in data:
-            rs = Meal.generate_meal_data(case['meal_cycle_id'], case['date_series'])
+            rs = Meal.generate_meal_data(case['meal_cycle_id'], case['meal_location_ids'], case['meal_time_ids'], case['date_series'])
             for rs_item, expected_item in zip(rs, case['expected']):
                 self.assertDictEqual(rs_item, expected_item)
 
