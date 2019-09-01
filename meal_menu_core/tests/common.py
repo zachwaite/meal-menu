@@ -38,6 +38,18 @@ class TestMealMenuBase(SavepointCase):
         },
 
     @classmethod
+    def make_meal(cls):
+        location = cls.env['meal.location'].create(cls.location_1_vals)
+        breakfast = cls.env['meal.time'].create(cls.time_1_vals)
+        Meal = cls.env['meal.meal']
+        return Meal.create({
+            'meal_date': datetime.date(2019, 11, 1),
+            'meal_location_id': location.id,
+            'meal_time_id': breakfast.id,
+        })
+
+
+    @classmethod
     def make_cycle(cls):
         location = cls.env['meal.location'].create(cls.location_1_vals)
         breakfast = cls.env['meal.time'].create(cls.time_1_vals)

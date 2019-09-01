@@ -28,7 +28,7 @@ class TestMealMeal(TestMealMenuBase):
         """Check if the required flag is set. No need to test if it works,
         odoo does that.
         """
-        REQUIRED = ['meal_date', 'meal_cycle_id', 'meal_location_id', 'meal_time_id']
+        REQUIRED = ['meal_date', 'meal_location_id', 'meal_time_id']
 
         Fields = self.env['ir.model.fields']
         MODEL = 'meal.meal'
@@ -98,3 +98,7 @@ class TestMealMeal(TestMealMenuBase):
             for rs_item, expected_item in zip(rs, case['expected']):
                 self.assertDictEqual(rs_item, expected_item)
 
+    def test_meal_label(self):
+        meal = self.make_meal()
+        # date = Friday, 11/1/19
+        self.assertEqual(meal.meal_label, 'Fri')

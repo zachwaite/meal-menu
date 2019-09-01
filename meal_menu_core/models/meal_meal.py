@@ -28,7 +28,6 @@ class Meal(models.Model):
 
     meal_cycle_id = fields.Many2one(
         comodel_name='meal.cycle',
-        required=True,
     )
 
     meal_location_id = fields.Many2one(
@@ -64,11 +63,9 @@ class Meal(models.Model):
     def get_meal_weekday(self, meal_date):
         return meal_date.strftime('%a')
 
-    # TODO: Integrate holiday labels
-    def get_special_label(self, special_meal):
-        pass
-
     def get_meal_label(self, meal_date, special_label):
+        """Designed to allow injecting a special label instead of normal weekday
+        """
         if special_label:
             return special_label
         else:
@@ -76,4 +73,7 @@ class Meal(models.Model):
 
     @api.multi
     def _compute_meal_label(self):
-        pass
+        # TODO: use special labels
+        for record in self:
+            record.meal_label = record.get_meal_label(record.meal_date, False)
+
