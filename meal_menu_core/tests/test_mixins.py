@@ -80,3 +80,61 @@ class TestTimspanMixin(TestMealMenuBase):
             dt_utc = pytz.UTC.localize(dt[0])
             dt_local = Timespan.localize(dt[1])
             self.assertEqual(dt_local, Timespan.convert_local(dt_utc))
+
+class TestDateRangeMixin(TestMealMenuBase):
+    def setUp(self):
+        super(TestDateRangeMixin, self).setUp()
+
+        # data
+        self.mocked_date = datetime.date(2019, 11, 1)
+
+
+    def test_get_end_date(self):
+        """
+        """
+        data = [
+            (21, datetime.date(2019, 11, 22)),
+            (10, datetime.date(2019, 11, 11)),
+        ]
+
+        DateRangeMixin = self.env['daterange.mixin']
+        for dur in data:
+            end_date = DateRangeMixin.get_end_date(self.mocked_date, dur[0])
+            self.assertEqual(end_date, dur[1])
+
+
+    def test_get_date_series(self):
+        data = [
+            {
+                'start_date': datetime.date(2019, 11, 1),
+                'end_date': datetime.date(2019, 11, 10),
+                'expect': [
+                    datetime.date(2019, 11, 1),
+                    datetime.date(2019, 11, 2),
+                    datetime.date(2019, 11, 3),
+                    datetime.date(2019, 11, 4),
+                    datetime.date(2019, 11, 5),
+                    datetime.date(2019, 11, 6),
+                    datetime.date(2019, 11, 7),
+                    datetime.date(2019, 11, 8),
+                    datetime.date(2019, 11, 9),
+                    datetime.date(2019, 11, 10),
+                ]
+            },
+            {
+                'start_date': datetime.date(2019, 11, 30),
+                'end_date': datetime.date(2019, 12, 5),
+                'expect': [
+                    datetime.date(2019, 11, 30),
+                    datetime.date(2019, 12, 1),
+                    datetime.date(2019, 12, 2),
+                    datetime.date(2019, 12, 3),
+                    datetime.date(2019, 12, 4),
+                    datetime.date(2019, 12, 5),
+                ]
+            }
+        ]
+        DateRangeMixin = self.env['daterange.mixin']
+        for case in data:
+            rs = DateRangeMixin.get_date_series(case['start_date'], case['end_date'])
+            self.assertListEqual(rs, case['expect'])

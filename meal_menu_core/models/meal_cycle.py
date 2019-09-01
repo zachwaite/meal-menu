@@ -1,27 +1,11 @@
+import datetime
 from odoo import models, fields, api, _ 
 
 
 class MealCycle(models.Model):
     _name = 'meal.cycle'
     _description = 'Collection of meals'
-
-    start_date = fields.Date(
-       required=True,
-       help='Start date for the cycle',
-       default=lambda self: self.get_default_cycle_start_date(),
-    )
-
-    cycle_duration = fields.Integer(
-        required=True,
-        help='The number of days in this meal cycle',
-        default=21,
-    )
-
-    end_date = fields.Date(
-        required=True,
-        help='End date for the cycle',
-        compute='_compute_end_date',
-    )
+    _inherit = ['daterange.mixin']
 
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -34,31 +18,19 @@ class MealCycle(models.Model):
         default=True,
     )
 
-    # meal_ids
+    meal_ids = fields.One2many(
+        comodel_name='meal.meal',
+        inverse_name='meal_cycle_id',
+    )
     # meal_location_ids
     # meal_time_ids
-
-    @api.multi
-    def _compute_end_date(self):
-        for record in self:
-            record.end_date = record.get_end_date(record.start_date, record.cycle_duration)
-
-    def get_end_date(self, start_date, cycle_duration):
-        """Add start_date and cycle_duration to get the end_date
-
-        Args:
-            start_date (datetime.date)
-            cycle_duration (int)
-
-        Returns:
-            A datetime.date
-        """
-        pass
 
     def get_default_cycle_start_date(self):
         """Use the history to get the next upcoming cycle start
         """
-        pass
+        Meal = self.env['meal.meal']
+        last_meal_date = Meal.get_last_scheduled_meal_date()
+        return last_meal_date + datetime.timedelta(days=1)
 
     @api.multi
     def generate_meals(self):
@@ -69,4 +41,9 @@ class MealCycle(models.Model):
         Ensure one to prevent confusion in finding default start date
         """
         self.ensure_one()
-        pass
+        Meal = self.env['meal.meal']
+        vals_list = []
+        date_series = self.get_date_series(self.start_date, self.end_date)
+        # TODO: This will need additional params for meal_time_ids, meal_location_ids
+        meal_data = Meal.generate_meal_data(self.id, date_series)
+        return Meal.create(meal_data)

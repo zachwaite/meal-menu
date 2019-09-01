@@ -1,6 +1,4 @@
 from .common import TestMealMenuBase
-from odoo.tools import mute_logger
-from psycopg2 import IntegrityError
 
 
 class TestMealLocation(TestMealMenuBase):

@@ -117,3 +117,62 @@ class ImageMixin(models.AbstractModel):
         tools.image_resize_images(vals, sizes={'image': (1024, None)})
         return vals
 
+
+class DateRangeMixin(models.AbstractModel):
+    _name = 'daterange.mixin'
+    _description = 'Mixin class for models with start, end and duration'
+
+    start_date = fields.Date(
+       required=True,
+       help='Start date for the cycle',
+       default=lambda self: self.get_default_cycle_start_date(),
+    )
+
+    duration = fields.Integer(
+        required=True,
+        help='The number of days in this meal cycle',
+        default=21,
+    )
+
+    end_date = fields.Date(
+        required=True,
+        help='End date for the cycle',
+        compute='_compute_end_date',
+    )
+
+    @api.multi
+    def _compute_end_date(self):
+        for record in self:
+            record.end_date = record.get_end_date(record.start_date, record.cycle_duration)
+
+    def get_end_date(self, start_date, cycle_duration):
+        """Add start_date and cycle_duration to get the end_date
+
+        Args:
+            start_date (datetime.date)
+            cycle_duration (int)
+
+        Returns:
+            A datetime.date
+        """
+        return start_date + datetime.timedelta(days=cycle_duration)
+
+    def get_date_series(self, start_date, end_date):
+        """Produce a list of dates
+
+        Args:
+            start_date (datetime.Date)
+            end_date (datetime.Date)
+
+        Returns:
+            A list of datetime.dates
+        """
+        if not start_date or not end_date:
+            raise ValidationError('start and end required')
+
+        if end_date < start_date:
+            raise ValidationError('end date should be after start')
+
+        rng = (end_date - start_date).days + 1
+        return [start_date + datetime.timedelta(days=x) for x in range(rng)]
+
