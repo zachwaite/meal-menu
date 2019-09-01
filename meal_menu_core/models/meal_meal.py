@@ -10,6 +10,11 @@ class Meal(models.Model):
         help='The scheduled date of the meal',
     )
 
+    meal_label = fields.Char(
+        string='Meal Day Label',
+        compute='_compute_meal_label',
+    )
+
     active = fields.Boolean(
         default=True,
     )
@@ -55,3 +60,20 @@ class Meal(models.Model):
         """Search the meal history for the last meal
         """
         return self.search([], limit=1, order='meal_date')
+
+    def get_meal_weekday(self, meal_date):
+        return meal_date.strftime('%a')
+
+    # TODO: Integrate holiday labels
+    def get_special_label(self, special_meal):
+        pass
+
+    def get_meal_label(self, meal_date, special_label):
+        if special_label:
+            return special_label
+        else:
+            return self.get_meal_weekday(meal_date)
+
+    @api.multi
+    def _compute_meal_label(self):
+        pass

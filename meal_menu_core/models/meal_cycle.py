@@ -57,3 +57,15 @@ class MealCycle(models.Model):
         meal_data = Meal.generate_meal_data(self.id, self.meal_location_ids.ids, self.meal_time_ids.ids, date_series)
         meals = Meal.create(meal_data)
         return True
+
+    @api.multi
+    def write(self, vals):
+        """State changes to cycle cascade to meals
+        """
+        if 'state' in vals:
+            self.meal_ids.write({'state': vals['state']})
+        return super(MealCycle, self).write(vals)
+
+    @api.multi
+    def action_publish_cycle(self):
+        return self.write({'state': 'published'})

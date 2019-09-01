@@ -1,3 +1,4 @@
+import datetime
 from odoo.tests.common import SavepointCase
 
 
@@ -36,3 +37,18 @@ class TestMealMenuBase(SavepointCase):
             'key': 'supper',
         },
 
+    @classmethod
+    def make_cycle(cls):
+        location = cls.env['meal.location'].create(cls.location_1_vals)
+        breakfast = cls.env['meal.time'].create(cls.time_1_vals)
+        lunch = cls.env['meal.time'].create(cls.time_2_vals)
+        dinner = cls.env['meal.time'].create(cls.time_3_vals)
+        time_ids = [breakfast.id, lunch.id, dinner.id]
+        cycle = cls.env['meal.cycle'].create([{
+            'start_date': datetime.date(2019, 11, 1),
+            'duration': 1,
+            'meal_location_ids': [(6, 0, location.ids)],
+            'meal_time_ids': [(6, 0, time_ids)],
+        }])
+        cycle.generate_meals()
+        return cycle

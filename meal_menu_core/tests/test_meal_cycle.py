@@ -180,3 +180,24 @@ class TestMealCycle(TestMealMenuBase):
         rs = meals.filtered(lambda m: m.meal_location_id == cafeteria_1 and m.meal_time_id == supper)
         self.assertEqual(len(rs), 21)
 
+    def test_publish_cascade(self):
+        cycle = self.make_cycle()
+        # sanity check
+        self.assertEqual(cycle.state, 'draft')
+        meal_states = cycle.meal_ids.mapped('state')
+        self.assertEqual(set(['draft']), set(meal_states))
+
+        # test 
+        cycle.write({'state': 'published'})
+        self.assertEqual(cycle.state, 'published')
+        meal_states = cycle.meal_ids.mapped('state')
+        self.assertEqual(set(['published']), set(meal_states))
+
+    def test_action_publish_cycle(self):
+        cycle = self.make_cycle()
+        # test 
+        cycle.action_publish_cycle()
+        self.assertEqual(cycle.state, 'published')
+        meal_states = cycle.meal_ids.mapped('state')
+        self.assertEqual(set(['published']), set(meal_states))
+
