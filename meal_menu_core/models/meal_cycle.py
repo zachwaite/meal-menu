@@ -38,10 +38,12 @@ class MealCycle(models.Model, OrmExtensions):
 
     meal_location_ids = fields.Many2many(
         comodel_name='meal.location',
+        default=lambda self: self.get_default_meal_locations(),
     )
 
     meal_time_ids = fields.Many2many(
         comodel_name='meal.time',
+        default=lambda self: self.get_default_meal_times(),
     )
 
     # extending from daterange.mixin

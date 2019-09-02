@@ -32,6 +32,16 @@ class TestMealCycle(TestMealMenuBase):
         self.assertEqual(cycle.start_date, cycle.get_default_cycle_start_date())
         self.assertEqual(cycle.duration, 21)
 
+    def test_default_meal_locations(self):
+        location = self.env['meal.location'].create(self.location_1_vals)
+        cycle = self.env['meal.cycle'].create({})
+        self.assertIn(location.id, cycle.meal_location_ids.ids)
+
+    def test_default_meal_timess(self):
+        time = self.env['meal.time'].create(self.time_1_vals)
+        cycle = self.env['meal.cycle'].create({})
+        self.assertIn(time.id, cycle.meal_time_ids.ids)
+
     def test_get_default_cycle_start_date(self):
         """ Mock the Meal.get_last_scheduled_meal_date() method for SOC
         """
