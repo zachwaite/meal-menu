@@ -30,9 +30,25 @@
         <field name="arch" type="xml">
             <form string="view_meal_cycle_form">
               <header>
+                <button name="generate_meals" type="object"
+                  string="Generate Meals"
+                  attrs="{'disabled': [('meal_count', '&gt;', 0)]}" />
                 <field name="state" widget="statusbar" />
               </header>
               <sheet>
+               <div class="oe_button_box" name="button_box">
+                 <button name="toggle_active" type="object"
+                   class="oe_stat_button" icon="fa-archive">
+                   <field name="active" widget="boolean_button"
+                     options='{"terminology": "archive"}'/>
+                 </button>
+                 <button class="oe_stat_button" type="object"
+                   name="action_view_meals"
+                    attrs="{'invisible': [('meal_count', '=', 0)]}"
+                    icon="fa-usd">
+                    <field string="Meals" name="meal_count" widget="statinfo"/>
+                </button>
+               </div>
                <div class="oe_title">
                  <h1 class="o_row">
                    <field name="name" placeholder="Title ... " />
@@ -47,14 +63,8 @@
                  <group>
                    <field name="meal_location_ids" widget="many2many_tags" />
                    <field name="meal_time_ids" widget="many2many_tags" />
-                   <field name="meal_count" />
                  </group>
                </group>
-               <notebook>
-                 <page string="Meals" attrs="{'invisible': [('meal_count', '=', 0)]}">
-                   <field name="meal_ids" />
-                 </page>
-               </notebook>
               </sheet>
             </form>
         </field>
