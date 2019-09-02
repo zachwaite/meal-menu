@@ -1,8 +1,9 @@
 import datetime
 from odoo import models, fields, api, _ 
 
+from .mixins import OrmExtensions
 
-class MealCycle(models.Model):
+class MealCycle(models.Model, OrmExtensions):
     _name = 'meal.cycle'
     _description = 'Collection of meals'
     _inherit = ['daterange.mixin']
@@ -58,6 +59,20 @@ class MealCycle(models.Model):
     )
 
     # ----------------- Private ------------------------------
+
+    def get_default_meal_locations(self):
+        """Use all available meal locations
+        """
+        MealLocation = self.env['meal.location']
+        locations = MealLocation.get_all()
+        return locations
+
+    def get_default_meal_times(self):
+        """Use all available meal times
+        """
+        MealTime = self.env['meal.time']
+        times = MealTime.get_all()
+        return times
 
     def get_meal_count(self):
         """The number of meals planned for this cycle

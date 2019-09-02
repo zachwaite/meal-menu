@@ -36,6 +36,9 @@ class TestMealCycle(TestMealMenuBase):
         """ Mock the Meal.get_last_scheduled_meal_date() method for SOC
         """
         # test 1 fallback to tomorrow
+        # clean meals for test
+        # TODO: patch this to handle pre-existing data
+        self.env['meal.meal'].search([]).unlink()
         MealCycle = self.env['meal.cycle']
         out = MealCycle.get_default_cycle_start_date()
         expected_out = datetime.date.today() + datetime.timedelta(days=1)

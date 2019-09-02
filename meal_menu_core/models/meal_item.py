@@ -1,7 +1,8 @@
 from odoo import models, fields, api, _ 
 
+from .mixins import OrmExtensions
 
-class MealItem(models.Model):
+class MealItem(models.Model, OrmExtensions):
     _name = 'meal.item'
     _description = 'A single food offering'
     _inherit = ['descriptor.mixin', 'image.mixin']

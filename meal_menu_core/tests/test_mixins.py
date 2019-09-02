@@ -138,3 +138,31 @@ class TestDateRangeMixin(TestMealMenuBase):
         for case in data:
             rs = DateRangeMixin.get_date_series(case['start_date'], case['end_date'])
             self.assertListEqual(rs, case['expect'])
+
+class TestModelExtended(TestMealMenuBase):
+    def test_get_all(self):
+        MealCycle = self.env['meal.cycle']
+        cycle = self.make_cycle()
+
+        # test 1: None
+        expected = MealCycle.search([])
+        rs = MealCycle.get_all()
+        self.assertEqual(rs, expected)
+        self.assertIn(cycle.id, rs.mapped('id'))
+
+        # deactivate cycle
+        cycle.write({'active': False})
+
+        # test 2: active True
+        expected = MealCycle.search([])
+        rs = MealCycle.get_all(active_test=True)
+        self.assertEqual(rs, expected)
+        self.assertNotIn(cycle.id, rs.mapped('id'))
+
+        # test 3: active False
+        expected = MealCycle.search([('active', 'in', [True, False])])
+        rs = MealCycle.get_all(active_test=False)
+        self.assertEqual(rs, expected)
+        self.assertNotIn(cycle.id, rs.mapped('id'))
+
+

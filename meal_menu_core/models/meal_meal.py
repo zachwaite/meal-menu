@@ -1,7 +1,9 @@
 from odoo import models, fields, api, _ 
 
+from .mixins import OrmExtensions
 
-class Meal(models.Model):
+
+class Meal(models.Model, OrmExtensions):
     _name = 'meal.meal'
     _description = 'A single meal'
 
@@ -58,7 +60,11 @@ class Meal(models.Model):
     def get_last_scheduled_meal_date(self):
         """Search the meal history for the last meal
         """
-        return self.search([], limit=1, order='meal_date')
+        last_meal = self.search([], limit=1, order='meal_date')
+        if last_meal:
+            return last_meal.meal_date
+        else:
+            return False
 
     def get_meal_weekday(self, meal_date):
         return meal_date.strftime('%a')

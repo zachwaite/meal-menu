@@ -181,3 +181,26 @@ class DateRangeMixin(models.AbstractModel):
         rng = (end_date - start_date).days + 1
         return [start_date + datetime.timedelta(days=x) for x in range(rng)]
 
+
+class OrmExtensions():
+    """Mixin to patch all applied models
+    """
+
+    @api.model
+    def get_all(self, active_test=None):
+        """Get all records in model
+
+        Args:
+            active_test (bool): The domain value for active. If `None`, omit active clause, else use the bool
+
+        Returns:
+            A recordset of all records in model
+        """
+        domain = []
+        if active_test is not None:
+            if active_test:
+                domain.append(('active', '=', True))
+            else:
+                domain.append(('active', 'in', [True, False]))
+        return self.search(domain)
+
