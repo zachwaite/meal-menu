@@ -1,4 +1,6 @@
 import datetime
+import re
+
 from .common import TestMealMenuBase
 from unittest.mock import MagicMock
 
@@ -21,6 +23,14 @@ class TestMealCycle(TestMealMenuBase):
         for fld in REQUIRED:
             frecord = Fields.search([('model', '=', MODEL), ('name', '=', fld)])
             self.assertTrue(frecord.required)
+
+    def test_default_dates(self):
+        """ check if default values are applying
+        """
+        vals = {}
+        cycle = self.env['meal.cycle'].create(vals)
+        self.assertEqual(cycle.start_date, cycle.get_default_cycle_start_date())
+        self.assertEqual(cycle.duration, 21)
 
     def test_get_default_cycle_start_date(self):
         """ Mock the Meal.get_last_scheduled_meal_date() method for SOC
@@ -46,6 +56,19 @@ class TestMealCycle(TestMealMenuBase):
         out = MealCycle.get_default_cycle_start_date()
         self.assertEqual(out, expected_out)
 
+    def test_meal_sequence(self):
+        vals = {
+            'start_date': datetime.date(2019, 12, 1),
+            'duration': 1,
+        }
+        cycle = self.env['meal.cycle'].create(vals)
+        pat = re.compile('CYCLE-[0-9]+')
+        self.assertTrue(pat.match(cycle.name))
+
+    def test_get_meal_count(self):
+        cycle = self.make_cycle()
+        get_ct = cycle.get_meal_count()
+        self.assertEqual(get_ct, 3)
 
     def test_generate_meals_01(self):
         """ Test that generate_meals() gives the right number of unique dates

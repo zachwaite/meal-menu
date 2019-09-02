@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+  <data>
+
+    <record id="action_meal_item_category" model="ir.actions.act_window">
+        <field name="name">Meal Item Categories</field>
+        <field name="res_model">meal.item.category</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    
+  </data>
+</odoo>

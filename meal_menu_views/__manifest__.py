@@ -1,19 +1,23 @@
 {
-    'name': 'Meal Menu Core',
-    'summary': """Models, methods and utils for meal plan management""",
+    'name': 'Meal Menu Backend Views',
+    'summary': """ """,
     'category': 'Uncategorized',
-    'version': '12.0.0.1',
+    'version': '11.0.0.1',
 
     'author': 'Waite Perspectives, LLC - Zach Waite',
 
     'depends': [
-            'base',
+            'meal_menu_core',
     ],
 
     'data': [
-        'security/groups.xml',
-        'security/ir.model.access.csv',
-        'data/sequences.xml',
+        'views/meal_location.xml',
+        'views/meal_time.xml',
+        'views/meal_item.xml',
+        'views/meal_item_category.xml',
+        'views/meal_meal.xml',
+        'views/meal_cycle.xml',
+        'views/menu_items.xml',
     ],
 
     'demo': [],

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+  <data>
+
+    <menuitem id="menu_meal_root"
+      name="Meals"
+      parent=""
+      action=""
+      sequence="25"/>
+
+    <menuitem id="menu_meal_cycle"
+      name="Meal Cycles"
+      parent="menu_meal_root"
+      action="action_meal_cycle"
+      sequence="25"/>
+
+    <menuitem id="menu_meal_meal"
+      name="Meals"
+      parent="menu_meal_root"
+      action="action_meal_meal"
+      groups="base.group_no_one"
+      sequence="25"/>
+
+    <menuitem id="menu_meal_config"
+      name="Configuration"
+      parent="menu_meal_root"
+      action=""
+      sequence="99"/>
+
+    <menuitem id="menu_meal_location"
+      name="Meal Locations"
+      parent="menu_meal_config"
+      action="action_meal_location"
+      sequence="25"/>
+    
+    <menuitem id="menu_meal_time"
+      name="Meal Times"
+      parent="menu_meal_config"
+      action="action_meal_time"
+      sequence="25"/>
+    
+    <menuitem id="menu_meal_item"
+      name="Meal Items"
+      parent="menu_meal_root"
+      action="action_meal_item"
+      sequence="50"/>
+    
+    <menuitem id="menu_meal_item_category"
+      name="Meal Item Categories"
+      parent="menu_meal_config"
+      action="action_meal_item_category"
+      sequence="25"/>
+    
+  </data>
+</odoo>

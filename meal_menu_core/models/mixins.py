@@ -92,6 +92,10 @@ class DescriptorMixin(models.AbstractModel):
        help='Description of the dining space. e.g. Our newly renovated dining room, with comfortable seating and friendly staff',
     )
 
+    sequence = fields.Integer(
+        default=25
+    )
+
 
 
 class ImageMixin(models.AbstractModel):
@@ -140,6 +144,7 @@ class DateRangeMixin(models.AbstractModel):
     )
 
     @api.multi
+    @api.depends('start_date', 'duration')
     def _compute_end_date(self):
         for record in self:
             record.end_date = record.get_end_date(record.start_date, record.duration)

@@ -9,6 +9,7 @@ class MealItem(models.Model):
     category_id = fields.Many2one(
         comodel_name='meal.item.category',
         help='The type of item. e.g. entree, appetizer',
+        ondelete='restrict',
     )
 
 

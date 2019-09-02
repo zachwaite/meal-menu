@@ -7,6 +7,13 @@ class MealCycle(models.Model):
     _description = 'Collection of meals'
     _inherit = ['daterange.mixin']
 
+    name = fields.Char(
+        default=lambda self: 'New',
+        readonly=True,
+        required=True,
+        copy=False,
+    )
+
     state = fields.Selection([
         ('draft', 'Draft'),
         ('published', 'Published'),
@@ -23,6 +30,11 @@ class MealCycle(models.Model):
         inverse_name='meal_cycle_id',
     )
 
+    meal_count = fields.Integer(
+        help='The number of meals planned for this cycle',
+        compute='_compute_meal_count',
+    )
+
     meal_location_ids = fields.Many2many(
         comodel_name='meal.location',
     )
@@ -30,6 +42,27 @@ class MealCycle(models.Model):
     meal_time_ids = fields.Many2many(
         comodel_name='meal.time',
     )
+
+    # extending from daterange.mixin
+    start_date = fields.Date(
+        default=lambda self: self.get_default_cycle_start_date(),
+        help='First day of the meal cycle',
+    )
+
+    end_date = fields.Date(
+        help='Last day of the meal cycle',
+    )
+
+    duration = fields.Integer(
+        help='The number of days in this cycle',
+    )
+
+    # ----------------- Private ------------------------------
+
+    def get_meal_count(self):
+        """The number of meals planned for this cycle
+        """
+        return len(self.meal_ids)
 
     def get_default_cycle_start_date(self):
         """Use the history to get the next upcoming cycle start
@@ -40,6 +73,13 @@ class MealCycle(models.Model):
             return last_meal_date + datetime.timedelta(days=1)
         else:
             return datetime.date.today() + datetime.timedelta(days=1)
+
+    # ----------------- Public Api ------------------------------
+
+    @api.multi
+    def _compute_meal_count(self):
+        for record in self:
+            record.meal_count = record.get_meal_count()
 
     @api.multi
     def generate_meals(self):
@@ -58,6 +98,18 @@ class MealCycle(models.Model):
         meals = Meal.create(meal_data)
         return True
 
+    @api.model
+    def create(self, vals):
+        """Use sequence
+        """
+        if vals.get('name', 'New') == 'New':
+            if 'company_id' in vals:
+                vals['name'] = self.env['ir.sequence'].with_context(force_company=vals['company_id']).next_by_code('meal.cycle') or 'New'
+            else:
+                vals['name'] = self.env['ir.sequence'].next_by_code('meal.cycle') or 'New'
+        rs = super(MealCycle, self).create(vals)
+        return rs
+
     @api.multi
     def write(self, vals):
         """State changes to cycle cascade to meals
@@ -66,6 +118,11 @@ class MealCycle(models.Model):
             self.meal_ids.write({'state': vals['state']})
         return super(MealCycle, self).write(vals)
 
+    # for backend button click handlers
     @api.multi
     def action_publish_cycle(self):
         return self.write({'state': 'published'})
+
+    @api.multi
+    def action_generate_meals(self):
+        return self.generate_meals()

@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_meal_meal_manager,meal.meal,model_meal_meal,meal_menu_core.group_meal_manager,1,1,1,1
+access_meal_location_manager,meal.location,model_meal_location,meal_menu_core.group_meal_manager,1,1,1,1
+access_meal_time_manager,meal.time,model_meal_time,meal_menu_core.group_meal_manager,1,1,1,1
+access_meal_cycle_manager,meal.cycle,model_meal_cycle,meal_menu_core.group_meal_manager,1,1,1,1
+access_meal_item_manager,meal.item,model_meal_item,meal_menu_core.group_meal_manager,1,1,1,1
+access_meal_item_category_manager,meal.item.category,model_meal_item_category,meal_menu_core.group_meal_manager,1,1,1,1

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+  <data>
+
+    <record id="seq_meal_cycle" model="ir.sequence">
+      <field name="name">Meal Cycle</field>
+      <field name="code">meal.cycle</field>
+      <field name="prefix">CYCLE-</field>
+      <field name="padding">0</field>
+      <field name="company_id" eval="False" />
+    </record>
+    
+  </data>
+</odoo>
