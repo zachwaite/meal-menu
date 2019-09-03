@@ -7,6 +7,18 @@
         <field name="res_model">meal.item.category</field>
         <field name="view_mode">tree,form</field>
     </record>
+
+    <record id="view_meal_item_category_tree" model="ir.ui.view">
+        <field name="name">view_meal_item_category_tree</field>
+        <field name="model">meal.item.category</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+              <field name="sequence" widget="handle" />
+              <field name="name" />
+              <field name="description" />
+            </tree>
+        </field>
+    </record>
     
   </data>
 </odoo>

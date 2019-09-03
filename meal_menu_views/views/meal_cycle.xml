@@ -33,7 +33,7 @@
                 <button name="generate_meals" type="object"
                   string="Generate Meals"
                   class="oe_highlight"
-                  attrs="{'disabled': [('meal_count', '&gt;', 0)]}" />
+                  attrs="{'invisible': [('meal_count', '&gt;', 0)]}" />
                 <field name="state" widget="statusbar" />
               </header>
               <sheet>

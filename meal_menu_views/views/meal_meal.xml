@@ -7,6 +7,20 @@
         <field name="res_model">meal.meal</field>
         <field name="view_mode">tree,form</field>
     </record>
+
+    <record id="view_meal_meal_tree" model="ir.ui.view">
+        <field name="name">view_meal_meal_tree</field>
+        <field name="model">meal.meal</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" >
+              <field name="meal_date" readonly="1"/>
+              <field name="meal_label" readonly="1"/>
+              <field name="state" readonly="1" />
+              <field name="meal_location_id" readonly="1" />
+              <field name="meal_time_id" readonly="1" />
+            </tree>
+        </field>
+    </record>
     
   </data>
 </odoo>

@@ -12,7 +12,7 @@
         <field name="name">view_meal_location_tree</field>
         <field name="model">meal.location</field>
         <field name="arch" type="xml">
-            <tree editable="top">
+            <tree>
               <field name="sequence" widget="handle" />
               <field name="name" />
             </tree>
@@ -27,13 +27,13 @@
               <header>
               </header>
               <sheet>
+               <field name="image" widget="image" class="oe_avatar"
+                 options="{'preview_image': 'image_medium'}" />
                <div class="oe_title">
                  <h1 class="o_row">
                    <field name="name" placeholder="e.g. Cafeteria 1 ... " />
                  </h1>
                </div>
-               <field name="image" widget="image" class="oe_avatar"
-                 options="{'preview_image': 'image_medium'}" />
                <group>
                  <field name="description" />
                </group>

@@ -177,8 +177,6 @@ class ImageMixin(models.AbstractModel):
             self._postprocess_images()
         return True
 
-
-
     def get_image_attachment(self, field_name='image'):
         """Query the attachments table for the record, thus to construct a url
 

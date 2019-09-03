@@ -150,13 +150,14 @@ class MealCycle(models.Model, OrmExtensions):
 
     @api.multi
     def action_view_meals(self):
-        return {
+        action = {
             'type': 'ir.actions.act_window',
             'name': 'Meals for %s' % self.name,
             'res_model': 'meal.meal',
-            'domain': [('id', 'in', self.meal_ids.ids)],
             'view_id': False,
             'view_mode': 'tree,form',
             'view_type': 'form',
+            'domain': [('id', 'in', self.meal_ids.ids)],
         }
+        return action
 
