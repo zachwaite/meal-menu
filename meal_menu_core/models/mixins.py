@@ -23,11 +23,11 @@ class TimespanMixin(models.AbstractModel):
     _description = 'Mixin class to add start, end time and helpers'
 
     start_time = fields.Float(
-        help='Time the meal starts (local timezone)',
+        help='Time the meal starts (local timezone). Uses 24hr clock.',
     )
 
     end_time = fields.Float(
-        help='Time the meal ends (local timezone)',
+        help='Time the meal ends (local timezone). Uses 24hr clock.',
     )
 
     def get_datetime_from_float_time(self, date, float_time):
