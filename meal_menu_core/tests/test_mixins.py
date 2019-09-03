@@ -22,6 +22,7 @@ class TestImageMixin(TestMealMenuBase):
         self.assertTrue(vals.get('image_small', False))
         self.assertTrue(vals.get('image_medium', False))
 
+
 class TestTimspanMixin(TestMealMenuBase):
     """
     """

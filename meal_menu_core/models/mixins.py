@@ -1,9 +1,8 @@
 import datetime
 import pytz
+import mimetypes
 from odoo import models, fields, api, _ 
 from odoo import tools
-
-
 
 def unfloat_time(float_time):
     """Utility to convert float time to a triple of (h, m, s)
@@ -102,6 +101,8 @@ class ImageMixin(models.AbstractModel):
     _name = 'image.mixin'
     _description = 'Mixin class to add images'
 
+    IMAGE_FIELDS = {'image', 'image_small', 'image_medium'}
+
     image = fields.Binary(
         attachment=True,
         help='The image used as the avatar, limted to 1024px x 1024px',
@@ -114,12 +115,74 @@ class ImageMixin(models.AbstractModel):
 
     image_medium = fields.Binary(
         attachment=True,
-        help='The image, resized to 64px x 64',
+        help='The image, resized to 128px x 128px',
     )
 
     def _prepare_image_vals(self, vals):
         tools.image_resize_images(vals, sizes={'image': (1024, None)})
         return vals
+
+    def _postprocess_images(self):
+        """Add a dummy datas_fname to the attachment record to be used in url
+        """
+        known_extensions = {
+            'image/jpg': '.jpg',
+            'image/jpeg': '.jpg',
+            'image/png': '.png',
+        }
+        image_fields = self.IMAGE_FIELDS
+        for fld in image_fields:
+            # uses sudo()
+            att = self.get_image_attachment(fld)
+
+            # create a bogus filename from mimetype and fieldname
+            ext = known_extensions.get(att.mimetype) or mimetypes.guess_extension(att.mimetype)
+            att.write({'datas_fname': fld + ext})
+        return True
+
+    def get_image_attachment(self, field_name='image'):
+        """Query the attachments table for the record, thus to construct a url
+
+        Args:
+            field_name (str): A string of an image field name
+
+        Returns:
+            A recordset of type ir.attachment()
+        """
+        allowed_field_names=self.IMAGE_FIELDS
+        if not field_name in allowed_field_names:
+            raise ValidationError('field_name must be in %s' % allowed_field_names)
+        Attachment = self.env['ir.attachment'].sudo()
+        domain = [
+            ('res_model', '=', self._name),
+            ('res_field', '=', field_name),
+            ('res_id', '=', self.id)
+        ]
+        return Attachment.search(domain)
+
+    def get_image_attachment_url(self, field_name='image', resize=()):
+        """Get a web url, optionally resizing
+
+        Args:
+            field_name (string):
+            resize (tuple): A tuple of (x, y) pixels to resize to, limited to 500x500
+
+        Returns:
+            A url
+        """
+        att = self.get_image_attachment(field_name)
+        if resize:
+            return '/web/image/{id}/{x}x{y}/{name}'.format(**{
+                'id': str(att.id),
+                'x': resize[0],
+                'y': resize[1],
+                'name': att.datas_fname,
+            })
+        else:
+            return '/web/image/{id}/{name}'.format(**{
+                'id': str(att.id),
+                'name': att.datas_fname,
+            })
 
 
 class DateRangeMixin(models.AbstractModel):
