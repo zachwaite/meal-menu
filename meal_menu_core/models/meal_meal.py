@@ -64,7 +64,7 @@ class Meal(models.Model, OrmExtensions):
     def get_last_scheduled_meal_date(self):
         """Search the meal history for the last meal
         """
-        last_meal = self.search([], limit=1, order='meal_date')
+        last_meal = self.search([], limit=1, order='meal_date desc')
         if last_meal:
             return last_meal.meal_date
         else:
