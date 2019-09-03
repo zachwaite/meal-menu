@@ -8,11 +8,14 @@
         <field name="inherit_id" ref="meal_menu_views.view_meal_meal_tree" />
         <field name="arch" type="xml">
           <xpath expr="//tree" position="inside">
-            <field name="entree_1" />
-            <field name="entree_2" />
-            <field name="appetizer_1" />
-            <field name="appetizer_2" />
-            <field name="dessert_1" />
+            <field name="entree_filter" invisible="1" />
+            <field name="appetizer_filter" invisible="1" />
+            <field name="dessert_filter" invisible="1" />
+            <field name="entree_1"    domain="[('category_id', '=', entree_filter)]"/>
+            <field name="entree_2"    domain="[('category_id', '=', entree_filter)]"/>
+            <field name="appetizer_1" domain="[('category_id', '=', appetizer_filter)]" />
+            <field name="appetizer_2" domain="[('category_id', '=', appetizer_filter)]" />
+            <field name="dessert_1"   domain="[('category_id', '=', dessert_filter)]" />
           </xpath>
         </field>
     </record>
