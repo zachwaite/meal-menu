@@ -145,6 +145,10 @@ class MealCycle(models.Model, OrmExtensions):
         return self.write({'state': 'published'})
 
     @api.multi
+    def action_unpublish_cycle(self):
+        return self.write({'state': 'draft'})
+
+    @api.multi
     def action_generate_meals(self):
         return self.generate_meals()
 

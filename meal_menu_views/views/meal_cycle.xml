@@ -34,6 +34,14 @@
                   string="Generate Meals"
                   class="oe_highlight"
                   attrs="{'invisible': [('meal_count', '&gt;', 0)]}" />
+                <button name="action_publish_cycle" type="object"
+                  string="Publish Meals"
+                  class="oe_highlight"
+                  attrs="{'invisible': [('state', '=', 'published')]}" />
+                <button name="action_unpublish_cycle" type="object"
+                  string="UnPublish Meals"
+                  class="oe_highlight"
+                  attrs="{'invisible': [('state', '=', 'draft')]}" />
                 <field name="state" widget="statusbar" />
               </header>
               <sheet>
