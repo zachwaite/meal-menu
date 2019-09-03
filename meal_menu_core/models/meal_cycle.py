@@ -4,6 +4,10 @@ from odoo import models, fields, api, _
 from .mixins import OrmExtensions
 
 class MealCycle(models.Model, OrmExtensions):
+    """ A collection of meals created from the attributes.
+
+        Note: create single defined, but create multi still works e.g. a vals list can be passed
+    """
     _name = 'meal.cycle'
     _description = 'Collection of meals'
     _inherit = ['daterange.mixin']

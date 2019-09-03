@@ -4,6 +4,10 @@ from .mixins import OrmExtensions
 
 
 class Meal(models.Model, OrmExtensions):
+    """A meal
+
+    Note: create multi
+    """
     _name = 'meal.meal'
     _description = 'A single meal'
 

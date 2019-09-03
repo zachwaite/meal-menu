@@ -25,22 +25,22 @@ class TestMealMenuBase(SavepointCase):
         cls.time_1_vals = {
             'name': 'Breakfast',
             'key': 'breakfast',
-        },
+        }
 
         cls.time_2_vals = {
             'name': 'Lunch',
             'key': 'lunch',
-        },
+        }
 
         cls.time_3_vals = {
             'name': 'Supper',
             'key': 'supper',
-        },
+        }
 
     @classmethod
     def make_meal(cls):
-        location = cls.env['meal.location'].create(cls.location_1_vals)
-        breakfast = cls.env['meal.time'].create(cls.time_1_vals)
+        location = cls.env['meal.location'].create([cls.location_1_vals])
+        breakfast = cls.env['meal.time'].create([cls.time_1_vals])
         Meal = cls.env['meal.meal']
         return Meal.create({
             'meal_date': datetime.date(2019, 11, 1),
@@ -51,10 +51,10 @@ class TestMealMenuBase(SavepointCase):
 
     @classmethod
     def make_cycle(cls):
-        location = cls.env['meal.location'].create(cls.location_1_vals)
-        breakfast = cls.env['meal.time'].create(cls.time_1_vals)
-        lunch = cls.env['meal.time'].create(cls.time_2_vals)
-        dinner = cls.env['meal.time'].create(cls.time_3_vals)
+        location = cls.env['meal.location'].create([cls.location_1_vals])
+        breakfast = cls.env['meal.time'].create([cls.time_1_vals])
+        lunch = cls.env['meal.time'].create([cls.time_2_vals])
+        dinner = cls.env['meal.time'].create([cls.time_3_vals])
         time_ids = [breakfast.id, lunch.id, dinner.id]
         cycle = cls.env['meal.cycle'].create([{
             'start_date': datetime.date(2019, 11, 1),

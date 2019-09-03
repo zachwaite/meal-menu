@@ -3,6 +3,10 @@ from odoo import models, fields, api, _
 from .mixins import OrmExtensions
 
 class MealItem(models.Model, OrmExtensions):
+    """ A single food offering
+
+    Note: create multi
+    """
     _name = 'meal.item'
     _description = 'A single food offering'
     _inherit = ['descriptor.mixin', 'image.mixin']
@@ -15,6 +19,10 @@ class MealItem(models.Model, OrmExtensions):
 
 
 class MealItemCategory(models.Model):
+    """ A food category.
+
+    Note: create multi
+    """
     _name = 'meal.item.category'
     _description = 'Category of a food item'
     _inherit = ['descriptor.mixin']

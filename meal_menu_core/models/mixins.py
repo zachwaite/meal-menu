@@ -122,23 +122,44 @@ class ImageMixin(models.AbstractModel):
         tools.image_resize_images(vals, sizes={'image': (1024, None)})
         return vals
 
+    @api.multi
     def _postprocess_images(self):
         """Add a dummy datas_fname to the attachment record to be used in url
         """
-        known_extensions = {
-            'image/jpg': '.jpg',
-            'image/jpeg': '.jpg',
-            'image/png': '.png',
-        }
-        image_fields = self.IMAGE_FIELDS
-        for fld in image_fields:
-            # uses sudo()
-            att = self.get_image_attachment(fld)
+        for record in self:
+            known_extensions = {
+                'image/jpg': '.jpg',
+                'image/jpeg': '.jpg',
+                'image/png': '.png',
+            }
+            image_fields = record.IMAGE_FIELDS
+            for fld in image_fields:
+                if record[fld]:
+                    # uses sudo()
+                    att = record.get_image_attachment(fld)
 
-            # create a bogus filename from mimetype and fieldname
-            ext = known_extensions.get(att.mimetype) or mimetypes.guess_extension(att.mimetype)
-            att.write({'datas_fname': fld + ext})
+                    # create a bogus filename from mimetype and fieldname
+                    ext = known_extensions.get(att.mimetype) or mimetypes.guess_extension(att.mimetype)
+                    att.write({'datas_fname': fld + ext})
         return True
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            vals.update(self._prepare_image_vals(vals))
+        rs = super(ImageMixin, self).create(vals_list)
+        rs._postprocess_images()
+        return rs
+
+    @api.multi
+    def write(self, vals):
+        if self.IMAGE_FIELDS.intersection(set(vals.keys())):
+            self._prepare_image_vals(vals)
+            rs = super(ImageMixin, self).write(vals)
+            self._postprocess_images()
+        return True
+
+
 
     def get_image_attachment(self, field_name='image'):
         """Query the attachments table for the record, thus to construct a url
