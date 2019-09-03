@@ -103,7 +103,6 @@ class TestDateRangeMixin(TestMealMenuBase):
             end_date = DateRangeMixin.get_end_date(self.mocked_date, dur[0])
             self.assertEqual(end_date, dur[1])
 
-
     def test_get_date_series(self):
         data = [
             {

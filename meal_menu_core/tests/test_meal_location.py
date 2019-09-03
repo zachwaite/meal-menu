@@ -9,7 +9,7 @@ class TestMealLocation(TestMealMenuBase):
         """Check if the required flag is set. No need to test if it works,
         odoo does that.
         """
-        REQUIRED = ['name', 'key']
+        REQUIRED = ['name',]
 
         Fields = self.env['ir.model.fields']
         MODEL = 'meal.location'
@@ -18,6 +18,7 @@ class TestMealLocation(TestMealMenuBase):
             frecord = Fields.search([('model', '=', MODEL), ('name', '=', fld)])
             self.assertTrue(frecord.required)
 
+    # tests for image.mixin
     def test_has_images(self):
         vals = self.location_1_vals
         self.location_1 = self.env['meal.location'].create(vals)
@@ -66,6 +67,18 @@ class TestMealLocation(TestMealMenuBase):
         url = location.get_image_attachment_url('image_small', resize=(200, 200))
         self.assertEqual(url, '/web/image/%s/200x200/%s' % (att.id, att.datas_fname))
 
+    # tests for descriptor.mixin
+    def test_key(self):
+        # test with default key
+        location = self.env['meal.location'].create({
+            'name': 'Breakfast',
+        })
+        self.assertEqual(location.key, 'breakfast')
 
+        # test with long default key
+        location = self.env['meal.location'].create({
+            'name': 'Early Morning #$ Breakfast',
+        })
+        self.assertEqual(location.key, 'early_morning_breakfast')
 
 

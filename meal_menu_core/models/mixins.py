@@ -1,6 +1,7 @@
 import datetime
 import pytz
 import mimetypes
+import re
 from odoo import models, fields, api, _ 
 from odoo import tools
 
@@ -82,9 +83,8 @@ class DescriptorMixin(models.AbstractModel):
     )
 
     key = fields.Char(
-        size=10,
         help='Short code uniquely identifying this record. e.g. cafeteria_1',
-        required=True,
+        compute='_compute_key',
     )
 
     description = fields.Text(
@@ -95,6 +95,24 @@ class DescriptorMixin(models.AbstractModel):
         default=25
     )
 
+    def snake_cased(self, s):
+        """Return name as snake case
+
+        Args:
+            s (string)
+
+        Returns:
+            A string
+        """
+        _s = s.replace(' ', '_').lower()
+        _s = re.sub('[^A-Za-z0-9_]', '', _s)
+        _s = re.sub('[_]{1,}', '_', _s)
+        return _s
+
+    @api.multi
+    def _compute_key(self):
+        for record in self:
+            record.key = record.snake_cased(record.name)
 
 
 class ImageMixin(models.AbstractModel):
