@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+  <data>
+
+    <record id="view_meal_meal_tree" model="ir.ui.view">
+        <field name="name">view_meal_meal_tree</field>
+        <field name="model">meal.meal</field>
+        <field name="inherit_id" ref="meal_menu_views.view_meal_meal_tree" />
+        <field name="arch" type="xml">
+          <xpath expr="//tree" position="inside">
+            <field name="entree_1" />
+            <field name="entree_2" />
+            <field name="appetizer_1" />
+            <field name="appetizer_2" />
+            <field name="dessert_1" />
+          </xpath>
+        </field>
+    </record>
+    
+  </data>
+</odoo>

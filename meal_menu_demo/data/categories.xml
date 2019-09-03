@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+  <data>
+
+    <record id="category_entree" model="meal.item.category">
+      <field name="name">Entree</field>
+      <field name="description">Main dishes</field>
+    </record>
+    
+    <record id="category_appetizer" model="meal.item.category">
+      <field name="name">Appetizer</field>
+      <field name="description">Starters</field>
+    </record>
+
+    <record id="category_dessert" model="meal.item.category">
+      <field name="name">Dessert</field>
+      <field name="description">Treats</field>
+    </record>
+    
+  </data>
+</odoo>

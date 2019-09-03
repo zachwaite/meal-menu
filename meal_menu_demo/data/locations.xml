@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+  <data>
+    
+    <record id="location_cafeteria_1" model="meal.location">
+      <field name="name">Cafeteria 1</field>
+      <field name="description">Main dining area</field>
+    </record>
+
+  </data>
+</odoo>

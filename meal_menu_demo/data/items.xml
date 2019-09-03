@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+  <data>
+
+    <record id="item_pizza" model="meal.item">
+      <field name="name">Pizza</field>
+      <field name="category_id" ref="category_entree" />
+    </record>
+    
+    <record id="item_calzone" model="meal.item">
+      <field name="name">Calzone</field>
+      <field name="category_id" ref="category_entree" />
+    </record>
+    
+    <record id="item_wings" model="meal.item">
+      <field name="name">Wings</field>
+      <field name="category_id" ref="category_appetizer" />
+    </record>
+    
+    <record id="item_celery" model="meal.item">
+      <field name="name">Celery Sticks</field>
+      <field name="category_id" ref="category_appetizer" />
+    </record>
+    
+    <record id="item_ice_cream" model="meal.item">
+      <field name="name">Ice Cream</field>
+      <field name="category_id" ref="category_dessert" />
+    </record>
+    
+  </data>
+</odoo>
