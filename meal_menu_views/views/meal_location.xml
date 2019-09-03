@@ -7,6 +7,40 @@
         <field name="res_model">meal.location</field>
         <field name="view_mode">tree,form</field>
     </record>
+
+    <record id="view_meal_location_tree" model="ir.ui.view">
+        <field name="name">view_meal_location_tree</field>
+        <field name="model">meal.location</field>
+        <field name="arch" type="xml">
+            <tree editable="top">
+              <field name="sequence" widget="handle" />
+              <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_meal_location_form" model="ir.ui.view">
+        <field name="name">view_meal_location_form</field>
+        <field name="model">meal.location</field>
+        <field name="arch" type="xml">
+            <form string="view_meal_location_form">
+              <header>
+              </header>
+              <sheet>
+               <div class="oe_title">
+                 <h1 class="o_row">
+                   <field name="name" placeholder="e.g. Cafeteria 1 ... " />
+                 </h1>
+               </div>
+               <field name="image" widget="image" class="oe_avatar"
+                 options="{'preview_image': 'image_medium'}" />
+               <group>
+                 <field name="description" />
+               </group>
+              </sheet>
+            </form>
+        </field>
+    </record>
     
   </data>
 </odoo>
