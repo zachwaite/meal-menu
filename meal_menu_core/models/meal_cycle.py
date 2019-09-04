@@ -112,10 +112,12 @@ class MealCycle(models.Model, OrmExtensions):
         Ensure one to prevent confusion in finding default start date
         """
         self.ensure_one()
+        if self.meal_ids:
+            raise UserError('The meals for this cycle have already been generated')
+
         Meal = self.env['meal.meal']
         vals_list = []
         date_series = self.get_date_series(self.start_date, self.end_date)
-        # TODO: This will need additional params for meal_time_ids, meal_location_ids
         meal_data = Meal.generate_meal_data(self.id, self.meal_location_ids.ids, self.meal_time_ids.ids, date_series)
         meals = Meal.create(meal_data)
         return True
