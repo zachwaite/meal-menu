@@ -20,6 +20,7 @@ class Meal(models.Model, OrmExtensions):
     """
     _name = 'meal.meal'
     _description = 'A single meal'
+    _rec_name = 'meal_time_id'
 
     meal_date = fields.Date(
         help='The scheduled date of the meal',

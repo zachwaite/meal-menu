@@ -29,7 +29,11 @@
                 <group>
                   <field name="meal_date" readonly="1"/>
                   <field name="meal_cycle_id" readonly="1" />
-                  <field name="meal_ids" readonly="1" />
+                  <notebook>
+                    <page string="Meals" groups="base.group_no_one">
+                      <field name="meal_ids" readonly="1" />
+                    </page>
+                  </notebook>
                 </group>
               </sheet>
             </form>

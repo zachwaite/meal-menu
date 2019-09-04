@@ -56,6 +56,11 @@ class MealCycle(models.Model, OrmExtensions):
         inverse_name='meal_cycle_id',
     )
 
+    meal_day_count = fields.Integer(
+        help='The meal days in this cycle',
+        compute='_compute_meal_day_count',
+    )
+
     # extending from daterange.mixin
     start_date = fields.Date(
         default=lambda self: self.get_default_cycle_start_date(),
@@ -91,6 +96,11 @@ class MealCycle(models.Model, OrmExtensions):
         """
         return len(self.meal_ids)
 
+    def get_meal_day_count(self):
+        """The number of meal days planned for this cycle
+        """
+        return len(self.meal_day_ids)
+
     def get_default_cycle_start_date(self):
         """Use the history to get the next upcoming cycle start
         """
@@ -107,6 +117,11 @@ class MealCycle(models.Model, OrmExtensions):
     def _compute_meal_count(self):
         for record in self:
             record.meal_count = record.get_meal_count()
+
+    @api.multi
+    def _compute_meal_day_count(self):
+        for record in self:
+            record.meal_day_count = record.get_meal_day_count()
 
     @api.multi
     def generate_meals(self):
@@ -182,3 +197,15 @@ class MealCycle(models.Model, OrmExtensions):
         }
         return action
 
+    @api.multi
+    def action_view_meal_days(self):
+        action = {
+            'type': 'ir.actions.act_window',
+            'name': 'Meal Days for %s' % self.name,
+            'res_model': 'meal.day',
+            'view_id': False,
+            'view_mode': 'tree,form',
+            'view_type': 'form',
+            'domain': [('id', 'in', self.meal_day_ids.ids)],
+        }
+        return action
