@@ -12,7 +12,6 @@ class Meal(models.Model, OrmExtensions):
     _description = 'A single meal'
 
     meal_date = fields.Date(
-        required=True,
         help='The scheduled date of the meal',
     )
 
@@ -34,16 +33,17 @@ class Meal(models.Model, OrmExtensions):
 
     meal_cycle_id = fields.Many2one(
         comodel_name='meal.cycle',
+        ondelete='cascade',
     )
 
     meal_location_id = fields.Many2one(
         comodel_name='meal.location',
-        required=True,
+        ondelete='restrict',
     )
 
     meal_time_id = fields.Many2one(
         comodel_name='meal.time',
-        required=True,
+        ondelete='restrict',
     )
 
     def generate_meal_data(self, meal_cycle_id, meal_location_ids, meal_time_ids, date_series):

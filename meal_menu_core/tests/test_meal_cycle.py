@@ -237,3 +237,16 @@ class TestMealCycle(TestMealMenuBase):
         meal_states = cycle.meal_ids.mapped('state')
         self.assertEqual(set(['published']), set(meal_states))
 
+    def test_fkeys(self):
+        cycle = self.make_cycle()
+        meals = cycle.meal_ids
+        meals.write({
+            'meal_location_id': False,
+            'meal_time_id': False,
+        })
+
+        cycle.unlink()
+        # per /odoo/odoo/addons/tests/test_orm.py, read on a deleted record should come back empty
+        # so use that for this test
+        self.assertFalse(meals.read())
+

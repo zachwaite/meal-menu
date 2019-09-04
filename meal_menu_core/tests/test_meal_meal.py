@@ -1,7 +1,9 @@
 import datetime
 from .common import TestMealMenuBase
 from unittest.mock import MagicMock
+from psycopg2 import IntegrityError, InternalError
 
+from odoo.tools import mute_logger
 from odoo.addons.meal_menu_core.models.meal_meal import Meal
 
 
@@ -28,7 +30,8 @@ class TestMealMeal(TestMealMenuBase):
         """Check if the required flag is set. No need to test if it works,
         odoo does that.
         """
-        REQUIRED = ['meal_date', 'meal_location_id', 'meal_time_id']
+        # REQUIRED = ['meal_date', 'meal_location_id', 'meal_time_id']
+        REQUIRED = []
 
         Fields = self.env['ir.model.fields']
         MODEL = 'meal.meal'
@@ -102,3 +105,18 @@ class TestMealMeal(TestMealMenuBase):
         meal = self.make_meal()
         # date = Friday, 11/1/19
         self.assertEqual(meal.meal_label, 'Fri')
+
+    @mute_logger('odoo.sql_db')
+    def test_fkeys_01(self):
+        meal = self.make_meal()
+
+        with self.assertRaises((IntegrityError, InternalError)):
+            meal.meal_location_id.unlink()
+
+    @mute_logger('odoo.sql_db')
+    def test_fkeys_02(self):
+        meal = self.make_meal()
+
+        with self.assertRaises((IntegrityError, InternalError)):
+            meal.meal_time_id.unlink()
+
