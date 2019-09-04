@@ -51,6 +51,11 @@ class MealCycle(models.Model, OrmExtensions):
         default=lambda self: self.get_default_meal_times(),
     )
 
+    meal_day_ids = fields.One2many(
+        comodel_name='meal.day',
+        inverse_name='meal_cycle_id',
+    )
+
     # extending from daterange.mixin
     start_date = fields.Date(
         default=lambda self: self.get_default_cycle_start_date(),

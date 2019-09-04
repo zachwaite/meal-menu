@@ -21,6 +21,13 @@
       groups="base.group_no_one"
       sequence="25"/>
 
+    <menuitem id="menu_meal_day"
+      name="Meal Days"
+      parent="menu_meal_root"
+      action="action_meal_day"
+      groups="base.group_no_one"
+      sequence="26"/>
+
     <menuitem id="menu_meal_config"
       name="Configuration"
       parent="menu_meal_root"

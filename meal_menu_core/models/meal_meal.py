@@ -56,11 +56,37 @@ class Meal(models.Model, OrmExtensions):
         ondelete='restrict',
     )
 
+    meal_day_id = fields.Many2one(
+        comodel_name='meal.day',
+    )
+
+    @api.multi
+    @api.depends('meal_date')
+    def _compute_meal_day_id(self):
+        for record in self:
+            record.meal_day_id = record.get_or_create_meal_day(self.meal_date)
+
     @api.multi
     def _compute_meal_label(self):
         # TODO: use special labels
         for record in self:
             record.meal_label = record.get_meal_label(record.meal_date, False)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'meal_date' in vals:
+                vals['meal_day_id'] = self.get_or_create_meal_day(vals['meal_date']).id
+        return super(Meal, self).create(vals_list)
+
+    @api.multi
+    def write(self, vals):
+        if 'meal_date' in vals:
+            vals['meal_day_id'] = self.get_or_create_meal_day(vals['meal_date']).id
+        rs = super(Meal, self).write(vals)
+        if 'meal_cycle_id' in vals:
+            self.mapped('meal_day_id').write({'meal_cycle_id': vals['meal_cycle_id']})
+        return rs
 
     @api.multi
     def unlink(self):
@@ -69,6 +95,16 @@ class Meal(models.Model, OrmExtensions):
                 raise UserError('Deleting published Meal Cycles is not allowed')
         return super(Meal, self).unlink()
 
+    def get_or_create_meal_day(self, meal_date):
+        MealDay = self.env['meal.day']
+        md = MealDay.search([('meal_date', '=', meal_date)])
+        if md:
+            return md
+        else:
+            vals = {
+                'meal_date': meal_date,
+            }
+            return MealDay.create(vals)
 
     def generate_meal_data(self, meal_cycle_id, meal_location_ids, meal_time_ids, date_series):
         data = []

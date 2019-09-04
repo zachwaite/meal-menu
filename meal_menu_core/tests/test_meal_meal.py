@@ -168,3 +168,33 @@ class TestMealMeal(TestMealMenuBase):
         grouped = cycle.meal_ids.group_by_week()
         for k, v in grouped.items():
             self.assertEqual(len(v), 3)
+
+    # TODO: Refactor to MealDay test class
+    def test_meal_day_create(self):
+        meal = self.make_meal()
+        self.assertEqual(len(meal.meal_day_id), 1)
+        self.assertEqual(meal.meal_day_id.meal_date, meal.meal_date)
+
+    def test_meal_day_write(self):
+        meal = self.make_meal()
+        # sanity
+        self.assertEqual(len(meal.meal_day_id), 1)
+        self.assertEqual(meal.meal_day_id.meal_date, meal.meal_date)
+
+        meal.meal_date = datetime.date(2019, 12, 25)
+        self.assertEqual(meal.meal_day_id.meal_date, datetime.date(2019, 12, 25))
+
+    def test_meal_day_cycle(self):
+        # test no cycle
+        meal = self.make_meal()
+        self.assertEqual(meal.meal_cycle_id, meal.meal_day_id.meal_cycle_id)
+
+        # test with cycle
+        cycle = self.make_cycle()
+        meal = cycle.meal_ids[0]
+        self.assertEqual(meal.meal_cycle_id, meal.meal_day_id.meal_cycle_id)
+
+        # test write
+        meal.write({'meal_cycle_id': False})
+        self.assertEqual(meal.meal_cycle_id, meal.meal_day_id.meal_cycle_id)
+

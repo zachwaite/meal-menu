@@ -16,6 +16,7 @@
         'views/meal_item.xml',
         'views/meal_item_category.xml',
         'views/meal_meal.xml',
+        'views/meal_day.xml',
         'views/meal_cycle.xml',
         'views/menu_items.xml',
     ],
