@@ -1,5 +1,7 @@
-import json
+from collections import defaultdict
 import datetime
+import json
+
 from odoo import models, fields, api, _ 
 from odoo.exceptions import UserError
 from odoo.tools import json_default
@@ -102,6 +104,29 @@ class Meal(models.Model, OrmExtensions):
             return special_label
         else:
             return self.get_meal_weekday(meal_date)
+
+    @api.multi
+    def group_by_week(self):
+        """Sort the meals and return a dict, tagging the group by the first date.
+        Loosely named group_by_week, but the starting weekday can be whatever.
+
+        Returns:
+            A dict of lists of meal ids
+        """
+        sorted_meals = self.sorted(key='meal_date')
+        if not sorted_meals:
+            return {}
+
+        wk = sorted_meals[0].meal_date
+        date0 = sorted_meals[0].meal_date
+        delta0 = 0
+        out = defaultdict(list)
+        for meal in sorted_meals:
+            delta = (meal.meal_date - date0).days
+            if delta > 0 and delta % 7 == 0 and meal.meal_date not in out.keys():
+                wk = meal.meal_date
+            out[wk].append(meal.id)
+        return out
 
     def _get_meal_data(self, delta, time_key, location_key, fields=[]):
         """ API workhorse. Use date delta and meal_time key to get the meal data

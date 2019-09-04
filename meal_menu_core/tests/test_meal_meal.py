@@ -163,3 +163,8 @@ class TestMealMeal(TestMealMenuBase):
                     'state': 'published',
                 })
 
+    def test_group_by_week(self):
+        cycle = self.make_cycle()
+        grouped = cycle.meal_ids.group_by_week()
+        for k, v in grouped.items():
+            self.assertEqual(len(v), 3)
