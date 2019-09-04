@@ -37,7 +37,7 @@
                 <button name="action_publish_cycle" type="object"
                   string="Publish Meals"
                   class="oe_highlight"
-                  attrs="{'invisible': [('state', '=', 'published')]}" />
+                  attrs="{'invisible': ['|', ('state', '=', 'published'), ('meal_count', '=', 0)]}" />
                 <button name="action_unpublish_cycle" type="object"
                   string="UnPublish Meals"
                   class="oe_highlight"
