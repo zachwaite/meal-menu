@@ -1,11 +1,12 @@
 import datetime
-from .common import TestMealMenuBase
-from unittest.mock import MagicMock
+import json
+from unittest.mock import MagicMock, patch
 from psycopg2 import IntegrityError, InternalError
 
 from odoo.exceptions import UserError
 from odoo.tools import mute_logger
 from odoo.addons.meal_menu_core.models.meal_meal import Meal
+from .common import TestMealMenuBase
 
 
 class TestMealMeal(TestMealMenuBase):
@@ -126,3 +127,39 @@ class TestMealMeal(TestMealMenuBase):
         meal.write({'state': 'published'})
         with self.assertRaises(UserError):
             meal.unlink()
+
+    def test_get_meal_data_01(self):
+        with patch('odoo.addons.meal_menu_core.models.meal_meal.today') as mocked_today:
+            mocked_today.return_value = datetime.date(2019, 11, 1)
+            assert mocked_today() == datetime.date(2019, 11, 1)
+            Meal = self.env['meal.meal']
+            cycle = self.make_cycle()
+            cycle.action_publish_cycle()
+
+            flds = ['meal_date', 'state']
+            data = Meal._get_meal_data(delta=0, time_key='lunch', location_key='cafeteria_1', fields=flds)
+            for rec in data:
+                del rec['id']
+            self.assertDictEqual(data[0], {
+                'meal_date': datetime.date(2019, 11, 1),
+                'state': 'published',
+            })
+
+    def test_get_meal_data_02(self):
+        with patch('odoo.addons.meal_menu_core.models.meal_meal.today') as mocked_today:
+            mocked_today.return_value = datetime.date(2019, 11, 1)
+            assert mocked_today() == datetime.date(2019, 11, 1)
+            Meal = self.env['meal.meal']
+            cycle = self.make_cycle()
+            cycle.action_publish_cycle()
+
+            flds = ['meal_date', 'state']
+            data = Meal.get_meal_data(delta=0, time_key='lunch', location_key='cafeteria_1', fields=flds)
+            reloaded = json.loads(data)
+            for rec in reloaded:
+                del rec['id']
+                self.assertDictEqual(rec, {
+                    'meal_date': '2019-11-01',
+                    'state': 'published',
+                })
+

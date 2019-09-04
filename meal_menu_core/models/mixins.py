@@ -85,6 +85,7 @@ class DescriptorMixin(models.AbstractModel):
     key = fields.Char(
         help='Short code uniquely identifying this record. e.g. cafeteria_1',
         compute='_compute_key',
+        store=True,
     )
 
     description = fields.Text(
@@ -110,6 +111,7 @@ class DescriptorMixin(models.AbstractModel):
         return _s
 
     @api.multi
+    @api.depends('name')
     def _compute_key(self):
         for record in self:
             record.key = record.snake_cased(record.name)
