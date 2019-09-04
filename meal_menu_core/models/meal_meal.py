@@ -1,4 +1,5 @@
 from odoo import models, fields, api, _ 
+from odoo.exceptions import UserError
 
 from .mixins import OrmExtensions
 
@@ -87,3 +88,9 @@ class Meal(models.Model, OrmExtensions):
         for record in self:
             record.meal_label = record.get_meal_label(record.meal_date, False)
 
+    @api.multi
+    def unlink(self):
+        for record in self:
+            if record.state == 'published':
+                raise UserError('Deleting published Meal Cycles is not allowed')
+        return super(Meal, self).unlink()

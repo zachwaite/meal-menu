@@ -4,6 +4,7 @@ import re
 from .common import TestMealMenuBase
 from unittest.mock import MagicMock
 
+from odoo.exceptions import UserError
 from odoo.addons.meal_menu_core.models.meal_meal import Meal
 
 
@@ -236,6 +237,13 @@ class TestMealCycle(TestMealMenuBase):
         self.assertEqual(cycle.state, 'published')
         meal_states = cycle.meal_ids.mapped('state')
         self.assertEqual(set(['published']), set(meal_states))
+
+    def test_no_unlink_published(self):
+        cycle = self.make_cycle()
+        cycle.action_publish_cycle()
+        with self.assertRaises(UserError):
+            cycle.unlink()
+
 
     def test_fkeys(self):
         cycle = self.make_cycle()

@@ -1,5 +1,6 @@
 import datetime
 from odoo import models, fields, api, _ 
+from odoo.exceptions import UserError
 
 from .mixins import OrmExtensions
 
@@ -138,6 +139,15 @@ class MealCycle(models.Model, OrmExtensions):
         if 'state' in vals:
             self.meal_ids.write({'state': vals['state']})
         return super(MealCycle, self).write(vals)
+
+    @api.multi
+    def unlink(self):
+        """Prevent deletion of published meal cycles
+        """
+        for record in self:
+            if record.state == 'published':
+                raise UserError('Deleting published Meal Cycles is not allowed')
+        return super(MealCycle, self).unlink()
 
     # for backend button click handlers
     @api.multi

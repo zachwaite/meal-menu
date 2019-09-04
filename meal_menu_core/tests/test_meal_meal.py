@@ -3,6 +3,7 @@ from .common import TestMealMenuBase
 from unittest.mock import MagicMock
 from psycopg2 import IntegrityError, InternalError
 
+from odoo.exceptions import UserError
 from odoo.tools import mute_logger
 from odoo.addons.meal_menu_core.models.meal_meal import Meal
 
@@ -120,3 +121,8 @@ class TestMealMeal(TestMealMenuBase):
         with self.assertRaises((IntegrityError, InternalError)):
             meal.meal_time_id.unlink()
 
+    def test_no_unlink_published(self):
+        meal = self.make_meal()
+        meal.write({'state': 'published'})
+        with self.assertRaises(UserError):
+            meal.unlink()
