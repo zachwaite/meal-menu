@@ -24,17 +24,17 @@
         <field name="name">view_meal_day_form</field>
         <field name="model">meal.day</field>
         <field name="arch" type="xml">
-            <form string="view_meal_day_form" create="false" edit="false">
+            <form string="view_meal_day_form" create="false">
               <sheet>
                 <group>
                   <field name="meal_date" readonly="1"/>
                   <field name="meal_cycle_id" readonly="1" />
-                  <notebook>
-                    <page string="Meals" groups="base.group_no_one">
-                      <field name="meal_ids" readonly="1" />
-                    </page>
-                  </notebook>
                 </group>
+                <notebook>
+                  <page string="Meals" groups="base.group_no_one">
+                    <field name="meal_ids" readonly="1" />
+                  </page>
+                </notebook>
               </sheet>
             </form>
         </field>

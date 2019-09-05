@@ -5,6 +5,7 @@ from odoo.exceptions import UserError
 class MealDay(models.Model):
     _name = 'meal.day'
     _description = 'Collection of meals for a meal_date'
+    _rec_name = 'meal_date'
 
     meal_date = fields.Date(
         required=True,
@@ -31,4 +32,17 @@ class MealDay(models.Model):
             if len(cycle_rs) > 1:
                 raise UserError('Meal Day must only belong to one Meal Cycle')
             record.meal_cycle_id = cycle_rs.id
+
+    def get_meal_item(self, key, slot):
+        """Get the related meal item from meal_ids
+        """
+        self.ensure_one()
+        meal = self.meal_ids.filtered(lambda m: m.meal_time_id.key == key)
+        return meal[slot]
+
+    def set_meal_item(self, key, slot, val):
+        self.ensure_one()
+        meal = self.meal_ids.filtered(lambda m: m.meal_time_id.key == key)
+        meal[slot] = val
+
 
