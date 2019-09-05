@@ -25,4 +25,4 @@ APPETIZER = self.env.ref('my_module.meal_item_category_entree')
 entree_1 = fields.Many2one('meal.item', domain=[('category_id', '=', ENTREE.id)])
 appetizer_1 = fields.Many2one('meal.item', domain=[('category_id', '=', APPETIZER.id)])
 
-
+TESTING
