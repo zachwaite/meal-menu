@@ -20,7 +20,11 @@ class Meal(models.Model, OrmExtensions):
     """
     _name = 'meal.meal'
     _description = 'A single meal'
-    _rec_name = 'meal_time_id'
+
+    name = fields.Char(
+        compute='_compute_meal_name',
+        store=True,
+    )
 
     meal_date = fields.Date(
         help='The scheduled date of the meal',
@@ -52,14 +56,42 @@ class Meal(models.Model, OrmExtensions):
         ondelete='restrict',
     )
 
+    meal_location_key = fields.Char(
+        related='meal_location_id.key',
+    )
+
     meal_time_id = fields.Many2one(
         comodel_name='meal.time',
         ondelete='restrict',
     )
 
+    meal_time_key = fields.Char(
+        related='meal_time_id.key',
+    )
+
     meal_day_id = fields.Many2one(
         comodel_name='meal.day',
     )
+
+    @api.multi
+    @api.depends('meal_date', 'meal_time_id')
+    def _compute_meal_name(self):
+        for record in self:
+            sdate = False
+            stime = False
+            if record.meal_date:
+                sdate = record.meal_date.strftime('%Y-%m-%d')
+            if record.meal_time_id:
+                stime = record.meal_time_id.name
+
+            if stime and sdate:
+                record.name = '%s - %s' % (stime, sdate)
+            elif stime and not sdate:
+                record.name = '%s -' % stime
+            elif sdate and not stime:
+                record.name = '- %s' % sdate
+            elif not sdate and not stime:
+                record.name = '-'
 
     @api.multi
     @api.depends('meal_date')

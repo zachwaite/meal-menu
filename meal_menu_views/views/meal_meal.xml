@@ -12,13 +12,44 @@
         <field name="name">view_meal_meal_tree</field>
         <field name="model">meal.meal</field>
         <field name="arch" type="xml">
-            <tree editable="bottom" >
+            <tree>
               <field name="meal_date" readonly="1"/>
               <field name="meal_label" readonly="1"/>
               <field name="state" readonly="1" />
               <field name="meal_location_id" readonly="1" />
               <field name="meal_time_id" readonly="1" />
             </tree>
+        </field>
+    </record>
+
+    <record id="view_meal_meal_form" model="ir.ui.view">
+        <field name="name">view_meal_meal_form</field>
+        <field name="model">meal.meal</field>
+        <field name="arch" type="xml">
+            <form string="view_meal_meal_form">
+              <header>
+                <field name="state" widget="statusbar" readonly="1" />
+              </header>
+              <sheet>
+               <div class="oe_title">
+                 <h1 class="o_row">
+                   <field name="name" />
+                 </h1>
+               </div>
+               <group>
+                 <field name="meal_label" />
+                 <field name="meal_date" />
+                 <field name="meal_cycle_id" />
+                 <field name="meal_location_id" />
+                 <field name="meal_location_key" invisible="1"/>
+                 <field name="meal_time_id" />
+                 <field name="meal_time_key" invisible="1"/>
+                 <field name="meal_day_id" />
+               </group>
+               <notebook>
+               </notebook>
+              </sheet>
+            </form>
         </field>
     </record>
     
