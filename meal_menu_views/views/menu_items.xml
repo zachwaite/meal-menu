@@ -6,6 +6,7 @@
       name="Meals"
       parent=""
       action=""
+      web_icon="meal_menu_views,static/description/icon.png"
       sequence="25"/>
 
     <menuitem id="menu_meal_cycle"
