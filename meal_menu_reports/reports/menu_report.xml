@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+  <data>
+
+  <record id="paperformat_us_menu" model="report.paperformat">
+      <field name="name">US Letter - Menu</field>
+      <field name="default" eval="True" />
+      <field name="format">Letter</field>
+      <field name="page_height">0</field>
+      <field name="page_width">0</field>
+      <field name="orientation">Portrait</field>
+      <field name="margin_top">2</field>
+      <field name="margin_bottom">0</field>
+      <field name="margin_left">0</field>
+      <field name="margin_right">0</field>
+      <field name="header_line" eval="False" />
+      <field name="header_spacing">0</field>
+      <field name="dpi">90</field>
+  </record>
+
+  <record id="paperformat_us_meal_cycle" model="report.paperformat">
+      <field name="name">US Letter - Menu Cycle</field>
+      <field name="default" eval="True" />
+      <field name="format">Letter</field>
+      <field name="page_height">0</field>
+      <field name="page_width">0</field>
+      <field name="orientation">Landscape</field>
+      <field name="margin_top">40</field>
+      <field name="margin_bottom">25</field>
+      <field name="margin_left">7</field>
+      <field name="margin_right">7</field>
+      <field name="header_line" eval="False" />
+      <field name="header_spacing">19</field>
+      <field name="dpi">90</field>
+  </record>
+
+
+    <report id="action_report_meal_menu"
+      string="Menu"
+      model="meal.meal"
+      report_type="qweb-pdf"
+      file="meal_menu_reports.report_meal_menu"
+      name="meal_menu_reports.report_meal_menu"
+      print_report_name="'Menu'"
+      paperformat="meal_menu_reports.paperformat_us_menu"
+    />
+
+    <report id="action_report_meal_cycle"
+      string="Meal Cycle"
+      model="meal.cycle"
+      report_type="qweb-pdf"
+      file="meal_menu_reports.report_meal_cycle"
+      name="meal_menu_reports.report_meal_cycle"
+      print_report_name="'Meal Cycle'"
+      paperformat="meal_menu_reports.paperformat_us_meal_cycle"
+    />
+
+  <template id="report_meal_menu">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="doc">
+        <t t-call="meal_menu_reports.report_meal_menu_document" />
+      </t>
+    </t>
+  </template>
+
+  <template id="report_meal_cycle">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="doc">
+        <t t-call="meal_menu_reports.report_meal_cycle_document" />
+      </t>
+    </t>
+  </template>
+
+  <template id="menu_layout">
+    <t t-call="web.html_container">
+      <div class="article o_report_menu_background" t-att-data-oe-model="o and o._name"
+        t-att-style="'background-image: url(' + doc.report_image_url + ')'"
+        t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+        <t t-raw="0"/>
+      </div>
+    </t>
+  </template>
+
+  <template id="report_meal_menu_document">
+    <t t-call="meal_menu_reports.menu_layout">
+    </t>
+  </template>
+
+  <template id="report_meal_cycle_document">
+    <t t-call="web.internal_layout">
+        <t t-foreach="doc.meal_ids.meals_by_week()" t-as="week">
+          <div class="container" style="page-break-before: always;">
+            <t t-foreach="week[1].meals_by_time()" t-as="time">
+              <div class="row" style="align-items: middle;">
+                <t t-foreach="time[1].meals_by_date()" t-as="day">
+                  <div class="col" style="border: 1px solid black;width:14.3%;text-align: center;">
+                    <t t-esc="day[1].mapped('meal_time_id.name')[0]" />
+                  </div>
+                </t>
+              </div>
+              <div class="row" style="align-items: middle;">
+                <t t-foreach="time[1].meals_by_date()" t-as="day">
+                  <div class="col" style="border: 1px solid black;width:14.3%;text-align: left;font-size:0.8rem;">
+                    <t t-raw="day[1].meal_items_formatted()" />
+                  </div>
+                </t>
+              </div>
+            </t>
+          </div>
+        </t>
+    </t>
+  </template>
+    
+  </data>
+</odoo>

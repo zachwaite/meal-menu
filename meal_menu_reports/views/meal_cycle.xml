@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+  <data>
+
+    <record id="view_meal_cycle_form" model="ir.ui.view">
+        <field name="name">view_meal_cycle_form</field>
+        <field name="model">meal.cycle</field>
+        <field name="inherit_id" ref="meal_menu_views.view_meal_cycle_form" />
+        <field name="arch" type="xml">
+          <xpath expr="//header/field[@name='state']" position="before">
+            <button name="print_meal_cycle" type="object" string="Print Meal Cycle"
+              class="oe_highlight"
+              />
+          </xpath>
+        </field>
+    </record>
+    
+  </data>
+</odoo>

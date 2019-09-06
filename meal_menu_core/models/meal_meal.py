@@ -213,6 +213,40 @@ class Meal(models.Model, OrmExtensions):
             out[wk].append(meal.id)
         return out
 
+    @api.multi
+    def meals_by_week(self):
+        out = []
+        grouped = self.group_by_week()
+        for k in sorted(grouped.keys()):
+            out.append((k, self.browse(grouped[k])))
+        return out
+
+    @api.multi
+    def meals_by_date(self):
+        out = []
+        dates = list(set(self.mapped('meal_date')))
+        for meal_date in sorted(dates):
+            meals = self.filtered(lambda m: m.meal_date == meal_date)
+            out.append((meal_date, meals))
+        return out
+
+    @api.multi
+    def meals_by_time(self):
+        out = []
+        time_ids = self.mapped('meal_time_id').ids
+        times = self.env['meal.time'].browse(time_ids)
+        sorted_times = times.sorted(lambda t: t.sequence)
+        for meal_time in sorted_times:
+            meals = self.filtered(lambda m: m.meal_time_id == meal_time)
+            out.append((meal_time, meals))
+        return out
+
+    def meal_items_formatted(self, sep='<br/>'):
+        lines = []
+        for item in self.meal_item_ids:
+            lines.append(item.name)
+        return sep.join(lines)
+
     def _get_meal_data(self, delta, time_key, location_key, fields=[]):
         """ API workhorse. Use date delta and meal_time key to get the meal data
         Meant to be overridden in project.

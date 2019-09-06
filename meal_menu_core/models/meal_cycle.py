@@ -76,7 +76,6 @@ class MealCycle(models.Model, OrmExtensions):
     )
 
     # ----------------- Private ------------------------------
-
     def get_default_meal_locations(self):
         """Use all available meal locations
         """
