@@ -12,3 +12,4 @@ class MealTime(models.Model, OrmExtensions):
     _description = 'The time details for the meal'
     _inherit = ['descriptor.mixin', 'image.mixin', 'timespan.mixin']
 
+    color = fields.Integer()

@@ -17,7 +17,10 @@
               <field name="meal_label" readonly="1"/>
               <field name="state" readonly="1" />
               <field name="meal_location_id" readonly="1" />
-              <field name="meal_time_id" readonly="1" />
+              <field name="meal_time_id" readonly="1"/>
+              <field name="meal_item_ids" widget="many2many_tags" readonly="1"
+                string="Meal Items"
+                />
             </tree>
         </field>
     </record>
@@ -37,14 +40,14 @@
                  </h1>
                </div>
                <group>
-                 <field name="meal_label" />
-                 <field name="meal_date" />
-                 <field name="meal_cycle_id" />
-                 <field name="meal_location_id" />
-                 <field name="meal_location_key" invisible="1"/>
-                 <field name="meal_time_id" />
-                 <field name="meal_time_key" invisible="1"/>
-                 <field name="meal_day_id" />
+                 <field name="meal_label" readonly="1" />
+                 <field name="meal_date" readonly="1" />
+                 <field name="meal_cycle_id" readonly="1"/>
+                 <field name="meal_location_id" readonly="1"/>
+                 <field name="meal_location_key" invisible="1" readonly="1"/>
+                 <field name="meal_time_id" readonly="1"/>
+                 <field name="meal_time_key" invisible="1" readonly="1"/>
+                 <field name="meal_day_id" readonly="1"/>
                </group>
                <notebook>
                </notebook>

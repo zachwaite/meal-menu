@@ -7,6 +7,9 @@ class MealDay(models.Model):
     _description = 'Collection of meals for a meal_date'
     _rec_name = 'meal_date'
 
+    # to be overriden
+    ITEM_FIELDS = []
+
     meal_date = fields.Date(
         required=True,
         readonly=True,
@@ -23,6 +26,16 @@ class MealDay(models.Model):
         store=True,
         help='The meal cycle owning the meals. Will always be a singleton as a date is never split cross cycle',
     )
+
+    meal_item_ids = fields.Many2many(
+        comodel_name='meal.item',
+        compute='_compute_meal_item_ids',
+    )
+
+    @api.multi
+    def _compute_meal_item_ids(self):
+        for record in self:
+            record.meal_item_ids = record.meal_ids.mapped('meal_item_ids')
 
     @api.multi
     @api.depends('meal_ids', 'meal_ids.meal_cycle_id')

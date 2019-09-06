@@ -21,6 +21,9 @@ class Meal(models.Model, OrmExtensions):
     _name = 'meal.meal'
     _description = 'A single meal'
 
+    # list of meal item field names, to be overridden
+    ITEM_FIELDS = []
+
     name = fields.Char(
         compute='_compute_meal_name',
         store=True,
@@ -72,6 +75,19 @@ class Meal(models.Model, OrmExtensions):
     meal_day_id = fields.Many2one(
         comodel_name='meal.day',
     )
+
+    meal_item_ids = fields.Many2many(
+        comodel_name='meal.item',
+        compute='_compute_meal_item_ids',
+    )
+
+    @api.multi
+    def _compute_meal_item_ids(self):
+        for record in self:
+            item_rs = self.env['meal.item']
+            for fld in record.ITEM_FIELDS:
+                item_rs += record[fld]
+            record.meal_item_ids = item_rs
 
     @api.multi
     @api.depends('meal_date', 'meal_time_id')
