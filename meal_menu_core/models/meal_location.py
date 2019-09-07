@@ -11,3 +11,7 @@ class MealLocation(models.Model, OrmExtensions):
     _description = 'The location where a meal will be served'
     _inherit = ['descriptor.mixin', 'image.mixin']
 
+    _sql_constraints = [
+        ('meal_location_key_unique', 'unique (key)', 'The name of this record should be unique'),
+    ]
+

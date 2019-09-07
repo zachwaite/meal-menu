@@ -13,3 +13,8 @@ class MealTime(models.Model, OrmExtensions):
     _inherit = ['descriptor.mixin', 'image.mixin', 'timespan.mixin']
 
     color = fields.Integer()
+
+    _sql_constraints = [
+        ('meal_time_key_unique', 'unique (key)', 'The name of this record should be unique'),
+    ]
+
