@@ -42,6 +42,10 @@ class MealDay(models.Model):
         compute='_compute_meal_item_ids',
     )
 
+    meal_item_count = fields.Integer(
+        compute='_compute_meal_item_ids',
+    )
+
     @api.multi
     @api.depends('meal_date')
     def _compute_meal_label(self):
@@ -54,6 +58,7 @@ class MealDay(models.Model):
     def _compute_meal_item_ids(self):
         for record in self:
             record.meal_item_ids = record.meal_ids.mapped('meal_item_ids')
+            record.meal_item_count = len(record.meal_ids.mapped('meal_item_ids'))
 
     @api.multi
     @api.depends('meal_ids', 'meal_ids.meal_cycle_id')

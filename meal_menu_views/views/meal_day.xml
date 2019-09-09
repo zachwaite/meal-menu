@@ -16,7 +16,9 @@
               <field name="meal_date" readonly="1" />
               <field name="meal_label" readonly="1" />
               <field name="meal_ids" widget="many2many_tags" readonly="1" />
+              <field name="meal_item_count" readonly="1" />
               <field name="meal_item_ids" string="Meal Items"
+                groups="base.group_no_one"
                 readonly="1" widget="many2many_tags" />
             </tree>
         </field>
