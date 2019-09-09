@@ -54,13 +54,13 @@
                  <button class="oe_stat_button" type="object"
                    name="action_view_meals"
                     attrs="{'invisible': [('meal_count', '=', 0)]}"
-                    icon="fa-usd">
+                    icon="fa-spoon">
                     <field string="Meals" name="meal_count" widget="statinfo"/>
                 </button>
                  <button class="oe_stat_button" type="object"
                    name="action_view_meal_days"
                     attrs="{'invisible': [('meal_day_count', '=', 0)]}"
-                    icon="fa-usd">
+                    icon="fa-calendar">
                     <field string="Days" name="meal_day_count" widget="statinfo"/>
                 </button>
                </div>
