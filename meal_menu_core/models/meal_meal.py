@@ -90,7 +90,7 @@ class Meal(models.Model, OrmExtensions):
             record.meal_item_ids = item_rs
 
     @api.multi
-    @api.depends('meal_date', 'meal_time_id')
+    @api.depends('meal_date', 'meal_time_id', 'meal_time_id.name')
     def _compute_meal_name(self):
         for record in self:
             sdate = False

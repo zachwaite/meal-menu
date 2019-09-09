@@ -177,6 +177,8 @@ class ImageMixin(models.AbstractModel):
             self._prepare_image_vals(vals)
             rs = super(ImageMixin, self).write(vals)
             self._postprocess_images()
+        else:
+            rs = super(ImageMixin, self).write(vals)
         return True
 
     def get_image_attachment(self, field_name='image'):

@@ -35,6 +35,7 @@
                  </h1>
                </div>
                <group>
+                 <field name="key" groups="base.group_no_one" />
                  <field name="description" />
                </group>
               </sheet>

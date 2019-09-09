@@ -10,6 +10,10 @@ class MealDay(models.Model):
     # to be overriden
     ITEM_FIELDS = []
 
+    active = fields.Boolean(
+        default=True,
+    )
+
     meal_date = fields.Date(
         required=True,
         readonly=True,

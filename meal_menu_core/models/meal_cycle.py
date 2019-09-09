@@ -159,6 +159,11 @@ class MealCycle(models.Model, OrmExtensions):
         """
         if 'state' in vals:
             self.meal_ids.write({'state': vals['state']})
+
+        if 'active' in vals:
+            self.with_context({'active_test': False}).mapped('meal_ids').write({'active': vals['active']})
+            self.with_context({'active_test': False}).mapped('meal_day_ids').write({'active': vals['active']})
+
         return super(MealCycle, self).write(vals)
 
     @api.multi
