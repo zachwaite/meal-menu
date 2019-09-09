@@ -64,10 +64,12 @@ class MealCycle(models.Model, OrmExtensions):
     # extending from daterange.mixin
     start_date = fields.Date(
         default=lambda self: self.get_default_cycle_start_date(),
+        copy=False,
         help='First day of the meal cycle',
     )
 
     end_date = fields.Date(
+        copy=False,
         help='Last day of the meal cycle',
     )
 
@@ -165,6 +167,30 @@ class MealCycle(models.Model, OrmExtensions):
             self.with_context({'active_test': False}).mapped('meal_day_ids').write({'active': vals['active']})
 
         return super(MealCycle, self).write(vals)
+
+    @api.multi
+    def copy(self, default=None):
+        if default is None:
+            default = {}
+
+        cycle = super(MealCycle, self).copy(default)
+        if 'meal_ids' not in default and 'duration' not in default:
+            cycle.generate_meals()
+            self.map_meals(cycle)
+        return cycle
+
+    @api.multi
+    def map_meals(self, new_cycle):
+        self.ensure_one()
+        old_meals = self.with_context({'active_test': False}).mapped('meal_ids').sorted(lambda m: (m.meal_date, m.meal_time_id.sequence))
+        new_meals = new_cycle.with_context({'active_test': False}).mapped('meal_ids').sorted(lambda m: (m.meal_date, m.meal_time_id.sequence))
+        if not len(old_meals) == len(new_meals):
+            raise ValidationError('Meals do not match up')
+        else:
+            for old, new in zip(old_meals, new_meals):
+                for fld in old.ITEM_FIELDS:
+                    new[fld] = old[fld]
+        return True
 
     @api.multi
     def unlink(self):
