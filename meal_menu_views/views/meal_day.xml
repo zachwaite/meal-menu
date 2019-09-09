@@ -14,6 +14,7 @@
         <field name="arch" type="xml">
           <tree create="false">
               <field name="meal_date" readonly="1" />
+              <field name="meal_label" readonly="1" />
               <field name="meal_ids" widget="many2many_tags" readonly="1" />
               <field name="meal_item_ids" string="Meal Items"
                 readonly="1" widget="many2many_tags" />
