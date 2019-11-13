@@ -39,6 +39,11 @@
                    <field name="category_id"  placeholder="Pick a category ... "/>
                  </h5>
                </div>
+               <notebook>
+                 <page string="Description">
+                   <field name="description" />
+                 </page>
+               </notebook>
               </sheet>
             </form>
         </field>
