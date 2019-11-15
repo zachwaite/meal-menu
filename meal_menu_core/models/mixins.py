@@ -11,7 +11,7 @@ def unfloat_time(float_time):
     Always using 0 for s
     """
     h, m = divmod(float(float_time) * 60, 60)
-    return (h, m, 0)
+    return (int(h), int(m), 0)
 
 def unfloat_time_formatted(float_time):
     """Utility to format float time as hh:mm:ss"""
@@ -26,9 +26,26 @@ class TimespanMixin(models.AbstractModel):
         help='Time the meal starts (local timezone). Uses 24hr clock.',
     )
 
+    start_time_txt = fields.Char(
+        compute='_compute_times_txt',
+        store=True,
+    )
+
     end_time = fields.Float(
         help='Time the meal ends (local timezone). Uses 24hr clock.',
     )
+
+    end_time_txt = fields.Char(
+        compute='_compute_times_txt',
+        store=True,
+    )
+
+    @api.multi
+    @api.depends('start_time', 'end_time')
+    def _compute_times_txt(self):
+        for record in self:
+            record.start_time_txt = record.get_start_datetime(datetime.date.today()).strftime('%-I:%M %p');
+            record.end_time_txt = record.get_end_datetime(datetime.date.today()).strftime('%-I:%M %p');
 
     def get_datetime_from_float_time(self, date, float_time):
         """Use the supplied date and self.*_time to construct a datetime in local time
@@ -43,14 +60,14 @@ class TimespanMixin(models.AbstractModel):
         y = date.year
         m = date.month
         d = date.day
-        h, m, s = unfloat_time(float_time)
-        return datetime.datetime(y, m, d, h, m, s)
+        H, M, S = unfloat_time(float_time)
+        return datetime.datetime(y, m, d, H, M, S)
 
     def get_start_datetime(self, date):
         return self.get_datetime_from_float_time(date, self.start_time)
 
     def get_end_datetime(self, date):
-        return self.get_datetime_from_float_time(date, self.start_time)
+        return self.get_datetime_from_float_time(date, self.end_time)
 
     @api.model
     def localize(self, naive):
