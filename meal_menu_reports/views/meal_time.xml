@@ -8,7 +8,7 @@
         <field name="inherit_id" ref="meal_menu_views.view_meal_time_form" />
         <field name="arch" type="xml">
           <xpath expr="//group" position="inside">
-            <field name="meal_report_image" widget="image" class="oe_avatar" />
+            <field name="meal_report_image" widget="image" class="oe_avatar" groups="base.group_no_one"/>
           </xpath>
         </field>
     </record>
