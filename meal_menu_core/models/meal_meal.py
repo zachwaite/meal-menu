@@ -36,6 +36,7 @@ class Meal(models.Model, OrmExtensions):
     meal_label = fields.Char(
         string='Meal Day Label',
         compute='_compute_meal_label',
+        store=True,
     )
 
     active = fields.Boolean(
@@ -116,6 +117,7 @@ class Meal(models.Model, OrmExtensions):
             record.meal_day_id = record.get_or_create_meal_day(self.meal_date)
 
     @api.multi
+    @api.depends('meal_date')
     def _compute_meal_label(self):
         # TODO: use special labels
         for record in self:
