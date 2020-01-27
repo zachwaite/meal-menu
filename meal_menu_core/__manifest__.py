@@ -2,7 +2,7 @@
     'name': 'Meal Menu Core',
     'summary': """Models, methods and utils for meal plan management""",
     'category': 'Uncategorized',
-    'version': '12.0.0.2',
+    'version': '12.0.0.3',
 
     'author': 'Waite Perspectives, LLC - Zach Waite',
 
