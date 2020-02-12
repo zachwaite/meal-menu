@@ -6,3 +6,5 @@ access_meal_time_manager,meal.time,model_meal_time,meal_menu_core.group_meal_man
 access_meal_cycle_manager,meal.cycle,model_meal_cycle,meal_menu_core.group_meal_manager,1,1,1,1
 access_meal_item_manager,meal.item,model_meal_item,meal_menu_core.group_meal_manager,1,1,1,1
 access_meal_item_category_manager,meal.item.category,model_meal_item_category,meal_menu_core.group_meal_manager,1,1,1,1
+access_product_template_meal_manager,product.template.meal.manager,product.model_product_template,meal_menu_core.group_meal_manager,1,1,1,1
+access_product_product_meal_manager,product.product.meal.manager,product.model_product_product,meal_menu_core.group_meal_manager,1,1,1,1
